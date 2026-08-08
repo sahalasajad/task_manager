@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
   before_action :require_login
-  before_action :set_task, only: [:edit, :update, :destroy, :complete]
+  before_action :set_task, only: [ :edit, :update, :destroy, :complete ]
 
   def index
     @tasks = current_user.tasks.order(created_at: :desc)

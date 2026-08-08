@@ -1,5 +1,4 @@
 class RegistrationsController < ApplicationController
-
   def new
     @user = User.new
   end
@@ -28,5 +27,4 @@ class RegistrationsController < ApplicationController
       :password_confirmation
     )
   end
-
 end

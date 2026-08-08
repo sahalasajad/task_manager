@@ -1,13 +1,13 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
-  title: MyString
-  description: MyText
+  title: Complete Ruby project
+  description: Finish the TaskFlow application
   completed: false
-  due_date: 2026-08-08
+  due_date: 2026-08-10
+  user: one
 
 two:
-  title: MyString
-  description: MyText
+  title: Study Rails
+  description: Prepare for the Ruby on Rails interview
   completed: false
-  due_date: 2026-08-08
+  due_date: 2026-08-12
+  user: two
