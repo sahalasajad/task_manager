@@ -1,0 +1,566 @@
+<div class="dashboard">
+
+  <!-- =========================
+       SIDEBAR
+  ========================== -->
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      <div class="logo-icon">✓</div>
+      <span>TaskFlow</span>
+    </div>
+
+    <nav class="sidebar-nav">
+
+      <p class="nav-label">MAIN</p>
+
+      <%= link_to tasks_path, class: "nav-item active" do %>
+        <span>▦</span>
+        Dashboard
+      <% end %>
+
+      <%= link_to new_task_path, class: "nav-item" do %>
+        <span>＋</span>
+        New Task
+      <% end %>
+
+      <p class="nav-label">ACCOUNT</p>
+
+      <%= button_to logout_path,
+          method: :delete,
+          class: "nav-item logout-nav" do %>
+        <span>↪</span>
+        Log out
+      <% end %>
+
+    </nav>
+
+    <!-- Current user -->
+    <div class="sidebar-bottom">
+
+      <div class="mini-user">
+
+        <div class="avatar">
+          <%= current_user.name.first.upcase %>
+        </div>
+
+        <div>
+          <strong><%= current_user.name %></strong>
+          <small>My workspace</small>
+        </div>
+
+      </div>
+
+    </div>
+
+  </aside>
+
+
+  <!-- =========================
+       MAIN CONTENT
+  ========================== -->
+
+  <main class="main-content">
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+      <div>
+        <span class="breadcrumb">
+          TaskFlow / Dashboard
+        </span>
+      </div>
+
+      <div class="topbar-right">
+
+        <div class="profile">
+
+          <div class="avatar">
+            <%= current_user.name.first.upcase %>
+          </div>
+
+          <div>
+            <strong><%= current_user.name %></strong>
+            <small>My workspace</small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- =========================
+         WELCOME SECTION
+    ========================== -->
+
+    <section class="welcome-section">
+
+      <div>
+
+        <p class="eyebrow">
+          YOUR WORKSPACE
+        </p>
+
+        <h1>
+          Good afternoon, <%= current_user.name %>
+        </h1>
+
+        <p class="welcome-text">
+          Here's what's happening with your tasks today.
+        </p>
+
+      </div>
+
+      <%= link_to "+ New Task",
+          new_task_path,
+          class: "primary-button" %>
+
+    </section>
+
+
+    <!-- =========================
+         STATISTICS
+    ========================== -->
+
+    <section class="stats-grid">
+
+      <!-- Total -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          #
+        </div>
+
+        <div>
+
+          <p>Total Tasks</p>
+
+          <h2>
+            <%= @total_tasks %>
+          </h2>
+
+          <span class="stat-positive">
+            All your tasks
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Completed -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          ✓
+        </div>
+
+        <div>
+
+          <p>Completed</p>
+
+          <h2>
+            <%= @completed_tasks %>
+          </h2>
+
+          <span class="stat-positive">
+            Tasks completed
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Pending -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          ○
+        </div>
+
+        <div>
+
+          <p>Pending</p>
+
+          <h2>
+            <%= @pending_tasks %>
+          </h2>
+
+          <span class="stat-warning">
+            Still to do
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Progress -->
+
+      <div class="stat-card">
+
+        <div class="stat-icon">
+          %
+        </div>
+
+        <div class="stat-grow">
+
+          <p>Progress</p>
+
+          <% progress =
+               if @total_tasks.zero?
+                 0
+               else
+                 (@completed_tasks.to_f / @total_tasks * 100).round
+               end
+          %>
+
+          <h2>
+            <%= progress %>%
+          </h2>
+
+          <div class="progress-bar">
+
+            <div
+              class="progress-fill"
+              style="width: <%= progress %>%">
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =========================
+         MAIN CONTENT GRID
+    ========================== -->
+
+    <section class="content-grid">
+
+
+      <!-- =========================
+           TASK LIST
+      ========================== -->
+
+      <div class="tasks-card">
+
+        <div class="section-header">
+
+          <div>
+
+            <p class="eyebrow">
+              OVERVIEW
+            </p>
+
+            <h2>
+              Recent Tasks
+            </h2>
+
+          </div>
+
+          <%= link_to "View all",
+              tasks_path,
+              class: "view-link" %>
+
+        </div>
+
+
+        <% if @tasks.empty? %>
+
+          <!-- EMPTY STATE -->
+
+          <div class="empty-state">
+
+            <div class="empty-icon">
+              ✓
+            </div>
+
+            <h3>
+              No tasks yet
+            </h3>
+
+            <p>
+              Create your first task and start getting things done.
+            </p>
+
+            <%= link_to "Create Task",
+                new_task_path,
+                class: "primary-button" %>
+
+          </div>
+
+
+        <% else %>
+
+          <!-- TASK LIST -->
+
+          <div class="task-list">
+
+            <% @tasks.each do |task| %>
+
+              <div class="task-row">
+
+
+                <!-- Completion indicator -->
+
+                <div class="task-check <%= 'completed' if task.completed? %>">
+
+                  <% if task.completed? %>
+                    ✓
+                  <% end %>
+
+                </div>
+
+
+                <!-- Task information -->
+
+                <div class="task-info">
+
+                  <h3 class="<%= 'task-completed' if task.completed? %>">
+
+                    <%= task.title %>
+
+                  </h3>
+
+
+                  <% if task.description.present? %>
+
+                    <p>
+                      <%= task.description %>
+                    </p>
+
+                  <% end %>
+
+
+                  <div class="task-meta">
+
+
+                    <% if task.due_date.present? %>
+
+                      <span>
+                        Due
+                        <%= task.due_date.strftime("%d %b %Y") %>
+                      </span>
+
+                    <% end %>
+
+
+                    <% if task.completed? %>
+
+                      <span class="status">
+                        Completed
+                      </span>
+
+                    <% else %>
+
+                      <span class="status">
+                        Pending
+                      </span>
+
+                    <% end %>
+
+
+                  </div>
+
+                </div>
+
+
+                <!-- Task actions -->
+
+                <div class="task-actions">
+
+
+                  <% unless task.completed? %>
+
+                    <%= button_to "✓",
+                        complete_task_path(task),
+                        method: :patch,
+                        class: "small-action",
+                        title: "Mark task as complete" %>
+
+                  <% end %>
+
+
+                  <%= link_to "Edit",
+                      edit_task_path(task),
+                      class: "small-action" %>
+
+
+                  <%= button_to "Delete",
+                      task_path(task),
+                      method: :delete,
+                      class: "small-action",
+                      data: {
+                        turbo_confirm: "Are you sure you want to delete this task?"
+                      } %>
+
+                </div>
+
+              </div>
+
+            <% end %>
+
+          </div>
+
+        <% end %>
+
+      </div>
+
+
+      <!-- =========================
+           RIGHT COLUMN
+      ========================== -->
+
+      <div class="right-column">
+
+
+        <!-- =========================
+             UPCOMING TASKS
+        ========================== -->
+
+        <div class="side-card">
+
+          <div class="section-header">
+
+            <div>
+
+              <p class="eyebrow">
+                SCHEDULE
+              </p>
+
+              <h2>
+                Upcoming
+              </h2>
+
+            </div>
+
+          </div>
+
+
+          <% if @upcoming_tasks.empty? %>
+
+            <div class="small-empty">
+              No upcoming deadlines.
+            </div>
+
+
+          <% else %>
+
+            <% @upcoming_tasks.each do |task| %>
+
+              <div class="upcoming-task">
+
+                <div class="date-box">
+
+                  <strong>
+                    <%= task.due_date.strftime("%d") %>
+                  </strong>
+
+                  <span>
+                    <%= task.due_date.strftime("%b") %>
+                  </span>
+
+                </div>
+
+
+                <div>
+
+                  <strong>
+                    <%= task.title %>
+                  </strong>
+
+                  <small>
+                    Upcoming deadline
+                  </small>
+
+                </div>
+
+              </div>
+
+            <% end %>
+
+          <% end %>
+
+        </div>
+
+
+        <!-- =========================
+             PRODUCTIVITY
+        ========================== -->
+
+        <div class="side-card productivity-card">
+
+          <p class="eyebrow">
+            PRODUCTIVITY
+          </p>
+
+          <h2>
+            Your progress
+          </h2>
+
+
+          <% progress =
+               if @total_tasks.zero?
+                 0
+               else
+                 (@completed_tasks.to_f / @total_tasks * 100).round
+               end
+          %>
+
+
+          <div
+            class="circle-progress"
+            style="
+              background:
+                radial-gradient(
+                  circle,
+                  white 58%,
+                  transparent 59%
+                ),
+                conic-gradient(
+                  #111111 0deg,
+                  #111111 <%= progress * 3.6 %>deg,
+                  #e5e5e3 <%= progress * 3.6 %>deg,
+                  #e5e5e3 360deg
+                );
+            "
+          >
+
+            <span>
+              <%= progress %>%
+            </span>
+
+          </div>
+
+
+          <p class="productivity-text">
+
+            You've completed
+            <strong><%= @completed_tasks %></strong>
+            of
+            <strong><%= @total_tasks %></strong>
+            tasks.
+
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
